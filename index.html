@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Linux - Perguntas e Respostas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(45deg, #2980b9, #3498db);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .page {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .question-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left-color: #e74c3c;
+        }
+
+        .question-item h4 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .question-item p {
+            color: #27ae60;
+            font-weight: 600;
+            font-size: 1rem;
+            background: rgba(39, 174, 96, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .page-counter {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .navigation {
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .page {
+                padding: 20px;
+            }
+
+            .question-item {
+                padding: 15px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐧 Quiz Linux</h1>
+            <p>Perguntas e Respostas sobre Linux - Traduzido para Português</p>
+        </div>
+        <!--
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">24</div>
+                <div class="stat-label">Páginas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">240+</div>
+                <div class="stat-label">Perguntas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Português</div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="🔍 Pesquisar perguntas..." id="searchInput">
+        </div>
+-->
+        <div class="navigation" id="navigation">
+            <!-- Botões de navegação serão gerados pelo JavaScript -->
+        </div>
+
+        <div id="page1" class="page active">
+            <div class="question-item">
+                <h4>Qual dos seguintes é um sistema de gerenciamento de banco de dados relacional de código aberto?</h4>
+                <p>MySQL</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes é um sistema operacional baseado em Debian para Raspberry Pi?</h4>
+                <p>Raspbian</p>
+            </div>
+            <div class="question-item">
+                <h4>Em que o Raspbian Linux é executado?</h4>
+                <p>Raspberry Pi</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando você usaria para obter documentação abrangente sobre qualquer comando no Linux?</h4>
+                <p>man command</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando pode ser usado para pesquisar arquivos de ajuda que mencionam a palavra "copy"?</h4>
+                <p>man –k copy</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando pode ser usado para encontrar o executável e as páginas man que existem para um
+                    determinado comando?</h4>
+                <p>whereis</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual tecla você pressiona para sair da leitura de uma página man?</h4>
+                <p>Q</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando pesquisa nomes e descrições de páginas de manual para uma palavra-chave fornecida pelo
+                    usuário?</h4>
+                <p>apropos</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando deve ser usado para exibir as permissões para cada arquivo no diretório atual?</h4>
+                <p>ls -la</p>
+            </div>
+            <div class="question-item">
+                <h4>Para ver todas as variáveis que estão no ambiente do usuário, use o comando _______.</h4>
+                <p>printenv</p>
+            </div>
+        </div>
+
+        <div id="page2" class="page">
+            <div class="question-item">
+                <h4>Para renomear o diretório ~/documents/letters para ~/documents/archive, qual dos seguintes comandos
+                    deve ser usado?</h4>
+                <p>mv ~/documents/letters ~/documents/archive</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual software lida com a instalação e remoção de software no Debian e Ubuntu?</h4>
+                <p>apt</p>
+            </div>
+            <div class="question-item">
+                <h4>O que é um sistema pré-integrado e autocontido feito combinando um aplicativo de software (por
+                    exemplo, software de servidor) com apenas o sistema operacional suficiente para ser executado de
+                    forma otimizada em hardware padrão da indústria ou em uma máquina virtual?</h4>
+                <p>Appliance virtual</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual das seguintes afirmações é VERDADEIRA sobre software de código aberto?</h4>
+                <p>Software de código aberto é um exemplo proeminente de colaboração aberta</p>
+            </div>
+            <div class="question-item">
+                <h4>Em qual dos seguintes você NÃO pode instalar o Linux?</h4>
+                <p>Smartcard</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando mostra todos os diretórios que o shell pesquisa por programas?</h4>
+                <p>echo $PATH</p>
+            </div>
+            <div class="question-item">
+                <h4>Em redes de computadores, o que significa DHCP?</h4>
+                <p>Dynamic Host Configuration Protocol</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual tipo de endereços IP usa uma notação decimal pontilhada?</h4>
+                <p>IPv4</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes comandos pode ser usado para resolver um nome DNS para um endereço IP?</h4>
+                <p>host</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual informação é usada por um computador para se conectar a uma rede local típica?</h4>
+                <p>Endereço IP</p>
+            </div>
+        </div>
+
+        <div id="page3" class="page">
+            <div class="question-item">
+                <h4>Qual comando você usaria para criar um link simbólico no Linux?</h4>
+                <p>ln -s</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes exibe conexões de rede para o Protocolo de Controle de Transmissão, tabelas de
+                    roteamento e uma série de estatísticas de interface de rede e protocolo de rede?</h4>
+                <p>netstat</p>
+            </div>
+            <div class="question-item">
+                <h4>Um computador Linux atualmente não tem acesso à internet. Qual comando é usado para exibir e
+                    manipular as informações sobre o gateway de rede para o sistema?</h4>
+                <p>route</p>
+            </div>
+            <div class="question-item">
+                <h4>O que é um conjunto de padrões que sustentam a maioria das comunicações de rede modernas no nível do
+                    software?</h4>
+                <p>TCP/IP</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual interface de rede sempre existe em um sistema Linux?</h4>
+                <p>lo</p>
+            </div>
+            <div class="question-item">
+                <h4>Que permissões seriam representadas pelo octal 517?</h4>
+                <p>r-x--xrwx</p>
+            </div>
+            <div class="question-item">
+                <h4>Como você representaria rwxr-xr-- em notação octal?</h4>
+                <p>754</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual das seguintes informações é fornecida na saída padrão do comando who?</h4>
+                <p>Nome de usuário, Identificador de Terminal, Data e Hora de Login</p>
+            </div>
+            <div class="question-item">
+                <h4>Para que é usado o comando dmesg?</h4>
+                <p>Para mostrar as mensagens de log do kernel</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes pacotes de software é um servidor de e-mail?</h4>
+                <p>Postfix</p>
+            </div>
+        </div>
+
+        <div id="page4" class="page">
+            <div class="question-item">
+                <h4>Qual é a saída do seguinte comando?</h4>
+                <p>abc</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes comandos cria um arquivo morto work.tar a partir do conteúdo do diretório
+                    ./work/?</h4>
+                <p>tar -cf work.tar ./work/</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando exibirá a última linha do arquivo document.txt?</h4>
+                <p>tail -n 1 document.txt</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual comando é usado para imprimir as últimas 10 linhas de um arquivo na tela?</h4>
+                <p>tail</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual opção pode ser usada com tail para imprimir os últimos X bytes de um arquivo na tela?</h4>
+                <p>-c</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual opção pode ser usada com tail ou head para especificar o número de linhas a serem exibidas na
+                    tela?</h4>
+                <p>-n</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual opção pode ser usada com tail para imprimir as últimas 10 linhas de um arquivo e, em seguida,
+                    continuar imprimindo quaisquer novas linhas que possam ser adicionadas continuamente?</h4>
+                <p>-f</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes é usado para redirecionar a saída padrão de um comando para um arquivo?</h4>
+                <p>1></p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes comandos é usado para extrair arquivos de um arquivo zip?</h4>
+                <p>-v</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes é usado para descompactar um arquivo tar?</h4>
+                <p>tar -x</p>
+            </div>
+        </div>
+
+        <div id="page5" class="page">
+            <div class="question-item">
+                <h4>Qual comando é usado para imprimir uma página de texto na tela por vez?</h4>
+                <p>less</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes caracteres em um prompt de shell indica que o shell está sendo executado com
+                    privilégios de root?</h4>
+                <p>#</p>
+            </div>
+            <div class="question-item">
+                <h4>Digitar $ seguido de pressionar qual tecla duas vezes, em rápida sucessão, listará todas as
+                    variáveis?</h4>
+                <p>TAB</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes é o ato de criar uma versão virtual de componentes como dispositivos de
+                    armazenamento e recursos de rede de computador?</h4>
+                <p>Virtualização</p>
+            </div>
+            <div class="question-item">
+                <h4>O que significa GUI?</h4>
+                <p>Graphical User Interface</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes é um exemplo de Linux embarcado?</h4>
+                <p>Android</p>
+            </div>
+            <div class="question-item">
+                <h4>O que controla diretamente o hardware e traduz os comandos de um software em algo que o hardware
+                    pode entender e agir?</h4>
+                <p>Kernel</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes programas em um sistema Linux você poderia usar como substituto para o Microsoft
+                    Word?</h4>
+                <p>Writer</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual das seguintes é uma organização americana sem fins lucrativos dedicada a expandir o alcance de
+                    obras criativas disponíveis para que outros possam construir legalmente e compartilhar?</h4>
+                <p>Creative Commons</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual é o nome genérico dado à ação de proteger metacaracteres do shell de serem tratados
+                    especialmente pelo shell?</h4>
+                <p>Quoting</p>
+            </div>
+        </div>
+
+        <div id="page6" class="page">
+            <div class="question-item">
+                <h4>Qual dos seguintes pode ser usado para representar um único número de 3 a 9?</h4>
+                <p>[3-9]</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes é uma opção válida para um comando típico para obter suas informações de uso
+                    incorporadas?</h4>
+                <p>--help</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual opção fará com que o comando echo NÃO produza uma nova linha final?</h4>
+                <p>-n</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual dos seguintes comandos produzirá uma lista de todos os nomes de arquivos em seu diretório
+                    inicial e todos os subdiretórios com nomes de arquivos terminando em .pdf?</h4>
+                <p>find ~ -name '*.pdf'</p>
+            </div>
+            <div class="question-item">
+                <h4>O que é um conjunto de páginas que explicam cada comando disponível no sistema?</h4>
+                <p>Páginas man</p>
+            </div>
+            <div class="question-item">
+                <h4>Seu diretório de trabalho atual é /home/jason/documents/. Você acabou de digitar cd .. na linha de
+                    comando e depois digitou pwd. Qual saída você recebe?</h4>
+                <p>/home/jason</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual das seguintes opções deve ser usada para remover um diretório e seus subdiretórios?</h4>
+                <p>rm -r</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual das seguintes NÃO é uma regra válida para nomear uma variável?</h4>
+                <p>Nomes de variáveis devem começar com números</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual é o comando adequado para compactar o arquivo filename.txt no arquivo zip chamado myfile.zip?
+                </h4>
+                <p>zip myfile.zip filename.txt</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual instrução é usada para obter entrada do terminal quando um script de shell está sendo
+                    executado?</h4>
+                <p>read</p>
+            </div>
+        </div>
+
+        <div id="page7" class="page">
+            <div class="question-item">
+                <h4>Qual dos seguintes é um sistema de gerenciamento de banco de dados relacional de código aberto?</h4>
+                <p>MySQL</p>
+
+            </div>
+
+            <div class="question-item">
+                <h4> Considere o seguinte script:
+
+                    ```
+                    #!/bin/bash
+                    ip=`route -n | grep UG | tr -s “ “ | cut -f 2 -d “ “`
+                    echo “Verificando se $ip está ativo...”
+                    ping -c 5 $ip
+
+                    ```
+
+                    Qual dos seguintes seria a primeira linha exibida na tela quando o script é executado pelo usuário?
+                </h4>
+                <p> Verificando se o endereço IP está ativo…</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para tornar uma variável de shell conhecida por programas executados
+                    posteriormente?
+                </h4>
+                <p> export</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual opção pode ser usada com cat para exibir números de linha com o texto de um arquivo na tela?
+                </h4>
+                <p> -n</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é uma das características mais básicas de um script de shell?</h4>
+                <p> A capacidade de executar comandos</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos criará um arquivo morto, chamado backup.tar, contendo todos os arquivos
+                    do
+                    diretório /home?</h4>
+                <p> tar -cf backup.tar /home</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para imprimir as primeiras 10 linhas de um arquivo na tela?</h4>
+                <p> head</p>
+            </div>
+            <div class="question-item">
+                <h4> O que significa HCL?</h4>
+                <p> Hardware Compatibility List</p>
+            </div>
+            <div class="question-item">
+                <h4> O que é um daemon?</h4>
+                <p> Um programa que é executado em segundo plano no sistema</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes é uma exigência da licença GPL, mas não da licença BSD?</h4>
+                <p> Usuários que modificam e distribuem o software sob a licença GPL devem disponibilizar as
+                    modificações que
+                    fizeram aos destinatários sob a mesma licença</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes é a ordem correta de operação de um computador?</h4>
+                <p> (1) O computador espera a entrada do usuário, (2) O usuário seleciona um comando e o insere via
+                    teclado ou
+                    mouse, (3) O computador executa o comando</p>
+            </div>
+        </div>
+
+        <div id="page8" class="page">
+            <div class="question-item">
+                <h4>Onde o Linux armazena a maioria de seus arquivos de log na árvore de diretórios? </h4>
+                <p> /var/log</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes arquivos contém a definição das contas de usuário locais?</h4>
+                <p> /etc/passwd</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual arquivo é usado para definir todos os usuários em um sistema Linux?</h4>
+                <p> /etc/passwd</p>
+            </div>
+            <div class="question-item">
+                <h4> Após instalar um novo pacote, em qual diretório você provavelmente encontrará seu arquivo de
+                    configuração?
+                </h4>
+                <p> /etc</p>
+            </div>
+            <div class="question-item">
+                <h4> Onde as senhas são armazenadas para usuários em um sistema Linux?</h4>
+                <p> /etc/shadow</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual arquivo em um sistema Linux contém as senhas para cada usuário no sistema?</h4>
+                <p> /etc/shadow</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual arquivo em um sistema Linux é modificado para definir o número máximo de dias antes que uma
+                    senha deva
+                    ser alterada?</h4>
+                <p> /etc/shadow</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual diretório contém os arquivos e diretórios copiados automaticamente para o diretório inicial de
+                    um novo
+                    usuário quando a conta é criada pela primeira vez?</h4>
+                <p> /etc/skel</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes arquivos contém um mapeamento de endereços IP para URLs localmente em sua
+                    máquina Linux?
+                </h4>
+                <p> /etc/hosts</p>
+            </div>
+            <div class="question-item">
+                <h4> Após instalar um novo pacote, em qual diretório você provavelmente encontrará seu arquivo de
+                    configuração?
+                </h4>
+                <p> /etc</p>
+            </div>
+        </div>
+
+        <div id="page9" class="page">
+            <div class="question-item">
+                <h4> Qual dos seguintes diretórios é frequentemente usado para armazenar arquivos de log?</h4>
+                <p> /var</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é usado como um sistema de arquivos virtual ou pseudo para fornecer uma árvore
+                    de todos
+                    os nós de dispositivo e drivers no kernel em execução? </h4>
+                <p> /dev</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é usado como um sistema de arquivos virtual ou pseudo usado para interfacear com
+                    o
+                    kernel e o processo?</h4>
+                <p> /proc</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes diretórios contém todos os kernels instalados em seu sistema e seus drivers
+                    necessários?
+                </h4>
+                <p> /boot</p>
+            </div>
+            <div class="question-item">
+                <h4> Que permissões foo1.txt tem depois de executar "chmod 644 foo1.txt"?</h4>
+                <p> foo1.txt é legível/gravável pelo proprietário</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual tipo de link é usado para apontar para outro arquivo como um atalho no Windows ou um alias no
+                    Macintosh?</h4>
+                <p> Link simbólico</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual tipo de link contém os dados no arquivo de destino?</h4>
+                <p> Hard link</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos é usado para mostrar as informações sobre um diretório ou um link
+                    simbólico?
+                </h4>
+                <p> ls -d</p>
+            </div>
+            <div class="question-item">
+                <h4> Um arquivo atualmente tem permissões de 755. Qual dos seguintes comandos mudaria a permissão do
+                    arquivo
+                    para r-xr--r--?</h4>
+                <p> chmod 544 filename</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes tarefas não é executada automaticamente para uma conta de usuário quando ela é
+                    criada
+                    usando o comando useradd?</h4>
+                <p> Criar o diretório inicial do usuário</p>
+            </div>
+        </div>
+
+        <div id="page10" class="page">
+            <div class="question-item">
+                <h4> Qual das seguintes informações pode ser exibida por top? </h4>
+                <p> Processos em execução, ordenados por consumo de CPU ou RAM</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual ferramenta de linha de comando criará um nome de arquivo que termina em .gz?</h4>
+                <p> gzip</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para imprimir o conteúdo completo de um arquivo na tela de uma vez?</h4>
+                <p> cat</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual operador de redirecionamento aceita texto nas linhas seguintes como entrada padrão?</h4>
+                <p> menor menor </p>
+            </div>
+            <div class="question-item">
+                <h4> Você está em um diretório que contém vários arquivos ocultos. Qual comando você deve usar para
+                    exibir
+                    arquivos ocultos no diretório atual?</h4>
+                <p> ls -a</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual versão do Linux deve ser instalada em um sistema com processador de 32 bits?</h4>
+                <p> x86</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual versão do Linux deve ser instalada em um sistema com processador de 64 bits?</h4>
+                <p> x64</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes opções é usada com tar para criar um novo arquivo morto .tar?</h4>
+                <p> -c</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes identificaria corretamente o dispositivo associado à segunda partição no
+                    primeiro disco
+                    rígido no primeiro controlador IDE de um sistema?</h4>
+                <p> /dev/hda2</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual coluna informa ao programa “w” qual sessão está em execução?</h4>
+                <p> WHAT</p>
+            </div>
+        </div>
+
+        <div id="page11" class="page">
+            <div class="question-item">
+                <h4> Qual comando seria usado para mudar o proprietário de foo1.txt de jasondion para administrator?
+                </h4>
+                <p> chown</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes NÃO está contido no arquivo /etc/passwd?</h4>
+                <p> A senha da conta do usuário</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para mudar a senha da conta de um usuário?</h4>
+                <p> passwd</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual opção pode ser usada com useradd para especificar o diretório inicial para um usuário?</h4>
+                <p> -d</p>
+            </div>
+            <div class="question-item">
+                <h4> Onde os arquivos temporários devem ser armazenados em um sistema Linux que podem ser excluídos com
+                    segurança durante uma reinicialização?</h4>
+                <p> /tmp</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos produzirá todas as linhas com o nome Fred em maiúsculas ou minúsculas,
+                    mas não
+                    a palavra red do arquivo data_file?</h4>
+                <p> grep '[Ff]red' data_file</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes programas em um sistema Linux você poderia usar em vez do Windows Media Player?
+                </h4>
+                <p> VLC</p>
+            </div>
+            <div class="question-item">
+                <h4> O que é definido por uma licença de Software Livre?</h4>
+                <p> As condições para modificar e distribuir o software licenciado</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é a principal diferença entre Linux e Windows/MAC OS?</h4>
+                <p> Linux é software de código aberto, enquanto os outros dois são sistemas operacionais de código
+                    fechado</p>
+            </div>
+            <div class="question-item">
+                <h4> O que é a prática de oferecer às pessoas o direito de distribuir livremente cópias e versões
+                    modificadas de
+                    uma obra com a estipulação de que os mesmos direitos sejam preservados em obras derivadas criadas
+                    posteriormente?</h4>
+                <p> Copyleft</p>
+            </div>
+        </div>
+
+        <div id="page12" class="page">
+            <div class="question-item">
+                <h4> Qual dos seguintes NÃO é uma proposta de valor aumentada do Software de Código Aberto em comparação
+                    com o
+                    Software Proprietário?</h4>
+                <p> Popularidade</p>
+            </div>
+            <div class="question-item">
+                <h4> Ao usar um navegador da web, o que um usuário deve fazer para evitar que dados privados sejam
+                    armazenados
+                    localmente?</h4>
+                <p> Os navegadores podem ser configurados para usar um modo privado que não armazena nenhum dado
+                    localmente</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando um usuário digitaria para excluir um diretório que não contém outros arquivos ou
+                    diretórios
+                    dentro dele?</h4>
+                <p> rmdir</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos pode pesquisar programas executáveis ou scripts localizados na variável
+                    PATH?
+                </h4>
+                <p> which</p>
+            </div>
+            <div class="question-item">
+                <h4> O que o usuário deve fazer para executar um programa que não está em um diretório localizado na
+                    variável
+                    PATH?</h4>
+                <p> incluir o caminho do arquivo para o programa</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual atalho de teclado permite copiar texto destacado enquanto trabalha no terminal da linha de
+                    comando?
+                </h4>
+                <p> CTRL + SHIFT + C</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual atalho de teclado permite colar um texto destacado copiado anteriormente enquanto trabalha no
+                    terminal
+                    da linha de comando?</h4>
+                <p> CTRL + SHIFT + V</p>
+            </div>
+            <div class="question-item">
+                <h4> Seu diretório de trabalho atual é /home/jason/documents/. Você acabou de digitar cd . na linha de
+                    comando e
+                    depois digitou pwd. Qual saída você recebe?</h4>
+                <p> /home/jason/documents/</p>
+            </div>
+            <div class="question-item">
+                <h4> Você acabou de criar um arquivo de texto com uma senha secreta chamado password.txt. Você quer
+                    garantir que
+                    a senha não seja vista quando o comando ls for executado no diretório atual. Qual comando você deve
+                    usar
+                    para garantir que o arquivo de texto esteja oculto do sistema de arquivos?</h4>
+                <p> mv password.txt .password.txt</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos criará um único diretório chamado dir1 dir2?</h4>
+                <p> mkdir “dir1 dir2”</p>
+            </div>
+        </div>
+
+        <div id="page13" class="page">
+            <div class="question-item">
+                <h4> Qual dos seguintes fornece a sintaxe correta para pesquisar linhas que começam com o padrão
+                    fornecido
+                    usando o comando grep?</h4>
+                <p> ^pattern</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é o número do descritor de arquivo usado para representar a Entrada Padrão
+                    (STDIN)?</h4>
+                <p> 0</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é o número do descritor de arquivo usado para representar a Saída Padrão
+                    (STDOUT)?</h4>
+                <p> 1</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual UID é geralmente usado para representar o usuário root em um sistema Linux?</h4>
+                <p> 0</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual GID é geralmente usado para representar o grupo root em um sistema Linux?</h4>
+                <p> 0</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é o número do descritor de arquivo usado para representar o Erro Padrão
+                    (STDERR)?</h4>
+                <p> 2</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual UID é geralmente usado para representar o primeiro usuário regular em um sistema Linux?</h4>
+                <p> 1000</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é o limite no número de contas de usuário em um único computador no Linux?</h4>
+                <p> Ilimitado</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes programas em um sistema Linux você poderia usar como substituto para o Adobe
+                    Photoshop?
+                </h4>
+                <p> Gimp</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é o nome do dispositivo UNIX para uma conexão de terminal físico ou virtual?
+                </h4>
+                <p> tty</p>
+            </div>
+        </div>
+
+        <div id="page14" class="page">
+            <div class="question-item">
+                <h4> Qual das seguintes respostas é verdadeira para computação em nuvem?</h4>
+                <p> Computação em Nuvem fornece novas ferramentas para gerenciar recursos de TI</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual NÃO é uma distribuição Linux?</h4>
+                <p> Torvalds</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes programas em um sistema Linux você poderia usar como substituto para o Microsoft
+                    PowerPoint?</h4>
+                <p> Impress</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é a disponibilidade sob demanda de recursos do sistema de computador,
+                    especialmente
+                    armazenamento de dados e poder de computação, sem gerenciamento ativo direto pelo usuário?</h4>
+                <p> Computação em Nuvem</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual distribuição Linux é usada como base para a criação do Ubuntu Linux?</h4>
+                <p> Debian</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para renomear um arquivo no Linux?</h4>
+                <p> mv</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é verdadeiro sobre nomes de variáveis de ambiente por convenção?</h4>
+                <p> Contém todas as letras maiúsculas</p>
+            </div>
+            <div class="question-item">
+                <h4> Você está trabalhando em um script que requer a combinação do conteúdo de dois arquivos de texto,
+                    file1.txt
+                    e file2.txt em uma única saída no terminal. Qual comando você deve usar?</h4>
+                <p> cat</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual símbolo pode ser usado para representar nenhum, um ou vários caracteres dentro dos critérios
+                    de
+                    pesquisa?</h4>
+                <p> *</p>
+            </div>
+            <div class="question-item">
+                <h4> O que o comando "rm -rf" faz no Linux?</h4>
+                <p> Remove todos os arquivos no diretório e subdiretórios</p>
+            </div>
+        </div>
+
+        <div id="page15" class="page">
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos aumenta o número de arquivos dentro de um diretório?</h4>
+                <p> touch newfile</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando um usuário digitaria para criar um novo arquivo no diretório atual?</h4>
+                <p> touch</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para copiar arquivos de um diretório para outro?</h4>
+                <p> cp</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é verdadeiro sobre uma listagem de diretório recursiva?</h4>
+                <p> Inclui o conteúdo de subdiretórios</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual palavra-chave deve ser usada para preencher o espaço em branco no seguinte segmento do script
+                    de shell
+                    fornecido? for i in *; _____ cat $i done</h4>
+                <p> do</p>
+            </div>
+            <div class="question-item">
+                <h4> Você foi solicitado a criar um script que apresentará ao usuário um menu integrado no qual ele pode
+                    selecionar 4 comandos diferentes para executar digitando 1, 2, 3 ou 4. Qual das seguintes instruções
+                    você
+                    deve usar para criar o método mais simples e eficaz de escolher o comando a ser executado com base
+                    na
+                    entrada do usuário?</h4>
+                <p> case</p>
+            </div>
+            <div class="question-item">
+                <h4> Como é possível determinar se um arquivo executável é um script de shell lido pelo Bash?</h4>
+                <p> A primeira linha começa com #!/bin/bash.</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes opções é usada para compactar um arquivo chamado filename?</h4>
+                <p> gzip filename</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes instruções pode ser usada para acessar o segundo argumento da linha de comando
+                    para um
+                    script?</h4>
+                <p> $2</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual ferramenta de linha de comando é usada para compactar um único arquivo usando o algoritmo
+                    Burrows-Wheeler?</h4>
+                <p> bzip2</p>
+            </div>
+        </div>
+
+        <div id="page16" class="page">
+            <div class="question-item">
+                <h4> Qual comando pode ser usado para exibir o conteúdo de vários arquivos na tela de uma vez?</h4>
+                <p> cat</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual string você deve adicionar para colocar a data no prompt do shell?</h4>
+                <p> \d</p>
+            </div>
+            <div class="question-item">
+                <h4> Como a saída normal de um comando pode ser gravada em um arquivo enquanto a saída de erro é
+                    descartada?
+                </h4>
+                <p> command >file 2>/dev/null</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual NÃO é uma das maneiras pelas quais o DHCP pode ser usado para entregar endereços IP?</h4>
+                <p> Permanente</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dispositivo de armazenamento seria listado como /dev/sdb no Linux?</h4>
+                <p> 2º disco rígido</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é usado como um sistema de arquivos virtual ou pseudo usado para interfacear com
+                    o
+                    kernel e o sistema como um todo, mas não com processos individuais?</h4>
+                <p> /sys</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é o sistema de arquivos para um CD-ROM? </h4>
+                <p> isofs</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes NÃO é VERDADEIRA sobre o ciclo de vida da distribuição Linux?</h4>
+                <p> As distribuições Linux são sempre lançamentos de curto prazo</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos é usado para visualizar o uso da memória em um sistema?</h4>
+                <p> free</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes maneiras NÃO permitiria que um usuário executasse uma tarefa de linha de comando
+                    que
+                    requer privilégios de root?</h4>
+                <p> Desabilitar firewall e forçar a abertura de um diretório, arquivo ou pasta</p>
+            </div>
+        </div>
+
+        <div id="page17" class="page">
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos pode ser usado para alterar as permissões padrão para arquivos e
+                    diretórios no
+                    momento da criação?</h4>
+                <p> umask</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual opção pode ser usada com useradd para criar um novo usuário sem um diretório inicial?</h4>
+                <p> -M</p>
+            </div>
+            <div class="question-item">
+                <h4> O que a letra t no final de drwxrwxrwt indica nas seguintes permissões de diretório? drwxrwxrwt 14
+                    root
+                    root 36864 2012-03-02 11:17 /tmp</h4>
+                <p> O t é usado para mostrar que o diretório é gravável globalmente, mas apenas o proprietário pode
+                    excluir seus
+                    próprios arquivos dentro do diretório</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual umask deve ser definido para um diretório ter 700 como suas permissões octais?</h4>
+                <p> rwx------</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para alterar a propriedade do grupo de um arquivo?</h4>
+                <p> chgrp</p>
+            </div>
+            <div class="question-item">
+                <h4> Por que os cookies do navegador da web são considerados perigosos?</h4>
+                <p> Cookies suportam a identificação e o rastreamento de usuários</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes NÃO é um ambiente de desktop Linux?</h4>
+                <p> Dwarf</p>
+            </div>
+            <div class="question-item">
+                <h4> Por que o arquivo data.txt está vazio depois de executar sort data.txt > data.txt?</h4>
+                <p> Porque o arquivo é truncado antes que o sort seja executado</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual símbolo pode ser usado para representar um único caractere dentro dos critérios de pesquisa?
+                </h4>
+                <p> ?</p>
+            </div>
+            <div class="question-item">
+                <h4> Para que é usado o comando ls no Linux?</h4>
+                <p> Lista os arquivos dentro de um diretório</p>
+            </div>
+        </div>
+
+        <div id="page18" class="page">
+            <div class="question-item">
+                <h4> Qual tipo de arquivo Linux contém listas de arquivos em vez dos dados reais?</h4>
+                <p> Diretórios</p>
+            </div>
+            <div class="question-item">
+                <h4> Como você executa uma listagem recursiva a partir do prompt de comando?</h4>
+                <p> ls -R</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual caractere é conhecido como diretório raiz?</h4>
+                <p> /</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando fecha a janela do terminal?</h4>
+                <p> exit</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes pode ser usado para representar as letras A a Q usando apenas letras minúsculas?
+                </h4>
+                <p> [a-q]</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é uma linguagem de programação interpretada, de alto nível e de propósito geral?
+                </h4>
+                <p> Python</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é um software que escuta solicitações de rede e responde a elas?</h4>
+                <p> Apache</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é um sistema operacional móvel baseado em uma versão modificada do kernel Linux
+                    projetado principalmente para dispositivos móveis com tela sensível ao toque?</h4>
+                <p> Android</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes programas em um sistema Linux você poderia usar como substituto para o Microsoft
+                    Outlook?</h4>
+                <p> Thunderbird</p>
+            </div>
+            <div class="question-item">
+                <h4> O que significa o termo GPL?</h4>
+                <p> General Public License</p>
+            </div>
+        </div>
+
+        <div id="page19" class="page">
+            <div class="question-item">
+                <h4> A saída do programa date deve ser salva na variável datenow. Qual é a instrução correta para
+                    inserir no
+                    shell para definir esta variável?</h4>
+                <p> datenow=$(date)</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é a principal diferença entre os ambientes de desktop do Windows/Mac OS e Linux?</h4>
+                <p> Windows/Mac OS cada um tem um ambiente de desktop inseparável, enquanto os ambientes de desktop
+                    Linux são
+                    modulares</p>
+            </div>
+            <div class="question-item">
+                <h4> Você acabou de instalar um adaptador de rede sem fio em seu sistema Linux, mas não consegue se
+                    conectar à
+                    rede sem fio. Qual é o problema mais provável?</h4>
+                <p> Você não instalou o driver certo para o dispositivo</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é a quantidade máxima de memória acessível por um sistema operacional de 32 bits?</h4>
+                <p> 4 GB</p>
+            </div>
+            <div class="question-item">
+                <h4> Quando o comando free é executado, o que a linha Mem: revela sobre o sistema?</h4>
+                <p> Estatísticas de RAM</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é a representação simbólica da permissão numérica octal 644?</h4>
+                <p> rw-r--r--</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos exibirá uma lista de todos os arquivos no diretório atual, incluindo
+                    aqueles
+                    que podem estar ocultos?</h4>
+                <p> ls -a</p>
+            </div>
+            <div class="question-item">
+                <h4> Depois de executar um comando para excluir todos os arquivos que começam com a letra "a", o arquivo
+                    Access.txt permaneceu. Supondo que o usuário tivesse a propriedade e as permissões corretas, por que
+                    Access.txt não foi excluído quando o comando foi executado?</h4>
+                <p> Nomes de arquivos Linux diferenciam maiúsculas de minúsculas</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando mostra quem está logado e o que eles estão fazendo no sistema?</h4>
+                <p> w</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes afirmações é VERDADEIRA para uma distribuição Linux usada em um ambiente
+                    corporativo?
+                </h4>
+                <p> Essas distribuições contêm versões de software que provaram ser estáveis, mesmo que não sejam a
+                    versão mais
+                    recente do software disponível</p>
+            </div>
+        </div>
+
+        <div id="page20" class="page">
+            <div class="question-item">
+                <h4> Você baixou uma grande distribuição Linux como um ISO que requer 3 GB de arquivos de instalação.
+                    Você
+                    deseja realizar a instalação a partir de uma unidade óptica. Que tipo de disco você deve gravar o
+                    arquivo
+                    ISO?</h4>
+                <p> DVD</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos pode ser usado para resolver um nome DNS para um endereço IP?</h4>
+                <p> nslookup</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes fornece a sintaxe correta para pesquisar linhas que terminam com o padrão
+                    fornecido
+                    usando o comando grep?</h4>
+                <p> pattern$</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes instruções seria usada para enviar a saída padrão e o erro padrão para o mesmo
+                    local?
+                </h4>
+                <p> 2>&1</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes opções é usada com tar para especificar o nome do arquivo do arquivo tar?</h4>
+                <p> -f</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos pode ser usado para conectar-se a um servidor remoto e executar alguns
+                    comandos
+                    com segurança?</h4>
+                <p> ssh</p>
+            </div>
+            <div class="question-item">
+                <h4> O que é usado como um espaço reservado para um valor desconhecido em um script, e seu valor é então
+                    calculado ou determinado quando o script é executado?</h4>
+                <p> Variável</p>
+            </div>
+            <div class="question-item">
+                <h4> O [script.sh](http://script.sh/) consiste nas seguintes linhas:
+
+                    ```bash
+                    #!/bin/bash
+                    echo $2 $1
+                    ```
+
+                    Qual saída aparecerá se o comando, ./script.sh test1 test2, for inserido?</h4>
+                <p> test2 test1</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes NÃO é um exemplo de gerenciador de pacotes de software Linux?</h4>
+                <p> abc</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes NÃO é uma das tecnologias centrais da World Wide Web?</h4>
+                <p> Navegador</p>
+            </div>
+        </div>
+
+        <div id="page21" class="page">
+            <div class="question-item">
+                <h4> Qual opção do histórico de comandos pode ser usada para limpar o histórico do usuário?</h4>
+                <p> -c</p>
+            </div>
+            <div class="question-item">
+                <h4>Quais das seguintes não são seções da página man? </h4>
+                <p>Mistakes</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual símbolo é usado para prefixar uma variável?</h4>
+                <p> $</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é uma série de pequenos computadores de placa única desenvolvidos para promover
+                    o ensino
+                    de ciência da computação básica em escolas e países em desenvolvimento?</h4>
+                <p> Raspberry Pi</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é um conjunto de software cliente-servidor para criar e usar serviços de
+                    hospedagem de
+                    arquivos?</h4>
+                <p> ownCloud</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando inicia o navegador da web Firefox a partir da linha de comando?</h4>
+                <p> firefox</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é o programa de computador central com controle total sobre tudo no sistema?
+                </h4>
+                <p> Kernel</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual distribuição Linux é usada como base para a criação do Scientific Linux?</h4>
+                <p> Red Hat</p>
+            </div>
+            <div class="question-item">
+                <h4> Onde o BIOS está localizado?</h4>
+                <p> Placa-mãe</p>
+            </div>
+            <div class="question-item">
+                <h4> Como você representaria r-xrw-r-- em notação octal?</h4>
+                <p> 564</p>
+            </div>
+        </div>
+
+        <div id="page22" class="page">
+            <div class="question-item">
+                <h4> Qual dos seguintes identifica corretamente a terceira partição, no segundo disco rígido, no
+                    primeiro
+                    controlador IDE em um sistema PC?</h4>
+                <p> /dev/hdb3</p>
+            </div>
+            <div class="question-item">
+                <h4> Seu sistema está com um problema que você acha que está sendo causado por um driver de dispositivo
+                    com
+                    defeito. Qual dos seguintes comandos você deve usar para imprimir o buffer de mensagens do kernel?
+                </h4>
+                <p> dmesg</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é o comando que mostrará as mensagens de tempo de inicialização do sistema?</h4>
+                <p> dmesg</p>
+            </div>
+            <div class="question-item">
+                <h4> Que tipo de arquivos é uma parte importante do diagnóstico de problemas com daemons?</h4>
+                <p> Arquivos de log</p>
+            </div>
+            <div class="question-item">
+                <h4>O que significa LAMP? </h4>
+                <p> A combinação de Linux, Apache, MySQL e PHP ou outras linguagens de programação</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dispositivo de rede serve como gateway entre sua rede interna e a rede externa?</h4>
+                <p> Roteador</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual arquivo contém uma lista dos grupos secundários do usuário?</h4>
+                <p> /etc/group</p>
+            </div>
+            <div class="question-item">
+                <h4> O que é um bit de permissão especial definido em um arquivo ou diretório que permite que apenas o
+                    proprietário do arquivo/diretório ou o usuário root exclua ou renomeie o arquivo?</h4>
+                <p> Sticky bit</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando é usado para fornecer informações sobre a identidade de um usuário, incluindo os nomes
+                    dos
+                    grupos aos quais o usuário pertence?</h4>
+                <p> id</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando adiciona o novo usuário tux e cria o diretório inicial do usuário com arquivos de
+                    configuração
+                    padrão?</h4>
+                <p>useradd -m tux</p>
+            </div>
+        </div>
+
+        <div id="page23" class="page">
+            <div class="question-item">
+                <h4>Qual das seguintes saídas pode ser exibida ao executar o comando last? </h4>
+                <p>root tty2 Qua Set 29 21:11 - 21:11 (00:00) </p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes comandos pode ser usado para determinar a hora do último login de um determinado
+                    usuário?</h4>
+                <p> last</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual das seguintes afirmações é FALSA?</h4>
+                <p> Arquivos ocultos começam com um sinal de cerquilha/hashtag.</p>
+            </div>
+            <div class="question-item">
+                <h4> Como a saída normal de um comando pode ser gravada em um arquivo enquanto a saída de erro é
+                    descartada?
+                </h4>
+                <p> command >file 2>/dev/null</p>
+            </div>
+            <div class="question-item">
+                <h4> O que o comando grep permite que um usuário faça?</h4>
+                <p> Pesquisar arquivos que contêm uma string especificada</p>
+            </div>
+            <div class="question-item">
+                <h4>Qual opção pode ser usada para redirecionar os erros de um comando para um arquivo especificado?
+                </h4>
+                <p> '2>'</p>
+            </div>
+            <div class="question-item">
+                <h4> Quais dos seguintes são dois tipos de mensagens de saída?</h4>
+                <p> Mensagens de Saída Padrão e Erro Padrão</p>
+            </div>
+            <div class="question-item">
+                <h4>Para determinar se o último comando executado em um sistema foi bem-sucedido, qual comando deve ser
+                    executado? </h4>
+                <p> echo $?</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual é a instrução correta a ser usada para comparação em um script de shell Linux?</h4>
+                <p> if [ $x -gt $y ]</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando um usuário digitaria para compactar e empacotar vários arquivos em um único arquivo?
+                </h4>
+                <p> zip</p>
+            </div>
+        </div>
+
+        <div id="page24" class="page">
+            <div class="question-item">
+                <h4> O que o operador de redirecionamento '<>' faz? </h4>
+                <p> Faz com que o arquivo especificado seja usado para entrada padrão e saída padrão</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual dos seguintes é um exemplo de globbing?</h4>
+                <p> ls /etc/*.txt</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando pode ser usado para exibir e limpar o histórico da linha de comando para um
+                    determinado
+                    usuário?</h4>
+                <p> history</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando usar para mostrar qual shell está sendo usado?</h4>
+                <p> echo $SHELL</p>
+            </div>
+            <div class="question-item">
+                <h4> Como o diretório atual e seus subdiretórios podem ser pesquisados no arquivo chamado MyFile.xml?
+                </h4>
+                <p> find . -name MyFile.xml</p>
+            </div>
+            <div class="question-item">
+                <h4> O comando "cd" é a abreviação de _____________.</h4>
+                <p> Change Directory</p>
+            </div>
+            <div class="question-item">
+                <h4> Qual comando mostra se /usr/bin está no caminho de pesquisa do shell atual?</h4>
+                <p> echo $PATH</p>
+            </div>
+            <div class="question-item">
+                <h4> Como se poderia pesquisar o arquivo foo.txt no diretório /home?</h4>
+                <p> find /home -name foo.txt</p>
+            </div>
+            <div class="question-item">
+                <h4> A saída do programa date deve ser salva na variável actdat. Qual é a instrução correta?</h4>
+                <p> actdat=`date`</p>
+            </div>
+
+        </div>
+
+            <div class="page-counter">
+                
+
+
+
+                <div class="page-counter">
+                    <span id="currentPage">1</span> de <span id="totalPages">24</span> páginas
+                </div>
+            </div>
+
+            <script>
+                // Gerar botões de navegação
+                const navigation = document.getElementById('navigation');
+                const totalPages = 24;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'nav-btn';
+                    btn.textContent = i;
+                    btn.onclick = () => showPage(i);
+                    if (i === 1) btn.classList.add('active');
+                    navigation.appendChild(btn);
+                }
+
+                // Função para mostrar página
+                function showPage(pageNum) {
+                    // Esconder todas as páginas
+                    document.querySelectorAll('.page').forEach(page => {
+                        page.classList.remove('active');
+                    });
+
+                    // Mostrar página selecionada
+                    document.getElementById(`page${pageNum}`).classList.add('active');
+
+                    // Atualizar botões de navegação
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelectorAll('.nav-btn')[pageNum - 1].classList.add('active');
+
+                    // Atualizar contador
+                    document.getElementById('currentPage').textContent = pageNum;
+
+                    // Scroll para o topo
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+
+                // Função de pesquisa
+                const searchInput = document.getElementById('searchInput');
+                searchInput.addEventListener('input', function () {
+                    const searchTerm = this.value.toLowerCase();
+                    const questionItems = document.querySelectorAll('.question-item');
+
+                    questionItems.forEach(item => {
+                        const questionText = item.querySelector('h4').textContent.toLowerCase();
+                        const answerText = item.querySelector('p').textContent.toLowerCase();
+
+                        if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                            item.style.display = 'block';
+                            // Destacar termo pesquisado
+                            if (searchTerm) {
+                                highlightText(item, searchTerm);
+                            } else {
+                                removeHighlight(item);
+                            }
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+
+                function highlightText(element, term) {
+                    const walker = document.createTreeWalker(
+                        element,
+                        NodeFilter.SHOW_TEXT,
+                        null,
+                        false
+                    );
+
+                    const textNodes = [];
+                    let node;
+                    while (node = walker.nextNode()) {
+                        textNodes.push(node);
+                    }
+
+                    textNodes.forEach(textNode => {
+                        const text = textNode.textContent;
+                        const regex = new RegExp(`(${term})`, 'gi');
+                        if (regex.test(text)) {
+                            const highlightedText = text.replace(regex, '<span class="highlight">$1</span>');
+                            const wrapper = document.createElement('div');
+                            wrapper.innerHTML = highlightedText;
+                            textNode.parentNode.replaceChild(wrapper, textNode);
+                        }
+                    });
+                }
+
+                function removeHighlight(element) {
+                    const highlights = element.querySelectorAll('.highlight');
+                    highlights.forEach(highlight => {
+                        highlight.outerHTML = highlight.innerHTML;
+                    });
+                }
+
+                // Navegação por teclado
+                document.addEventListener('keydown', function (e) {
+                    const currentPageNum = parseInt(document.getElementById('currentPage').textContent);
+
+                    if (e.key === 'ArrowLeft' && currentPageNum > 1) {
+                        showPage(currentPageNum - 1);
+                    } else if (e.key === 'ArrowRight' && currentPageNum < totalPages) {
+                        showPage(currentPageNum + 1);
+                    }
+                });
+
+                // Atualizar total de páginas
+                document.getElementById('totalPages').textContent = totalPages;
+            </script>
+</body>
+
+</html>
